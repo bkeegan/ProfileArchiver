@@ -2,14 +2,14 @@
 .SYNOPSIS 
 	Auto-archives user profile folders.
 .DESCRIPTION 
-    This script is designed to auto-archive user profiles created via Windows Folder Redirection policies (Group Policy) for users that no longer exist on the domain. This script will email a report of the results in text format.
+    	This script is designed to auto-archive user profiles created via Windows Folder Redirection policies (Group Policy) for users that no longer exist on the domain. This script will email a report of the results in text format.
 .NOTES 
-    File Name  : ProfileArchiver.ps1
-    Author     : Brenton keegan - brenton.keegan@gmail.com 
-    Licenced under GPLv3  
+    	File Name  : ProfileArchiver.ps1
+    	Author     : Brenton keegan - brenton.keegan@gmail.com 
+    	Licenced under GPLv3  
 .LINK 
 	https://github.com/bkeegan/ProfileArchiver
-    License: http://www.gnu.org/copyleft/gpl.html
+    	License: http://www.gnu.org/copyleft/gpl.html
 .EXAMPLE 
 	ProfileArchiver -s "\\server\share\profiles" -d "\\archiveserver\shares\profiles" -To "ArchiveAlerts@contoso.com" -From "ArchiveAlerts@contoso.com" -smtp "smtp.contoso.com"
 #> 
