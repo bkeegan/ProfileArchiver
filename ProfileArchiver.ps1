@@ -12,8 +12,6 @@
     License: http://www.gnu.org/copyleft/gpl.html
 .EXAMPLE 
 	ProfileArchiver -s "\\server\share\profiles" -d "\\archiveserver\shares\profiles" -To "ArchiveAlerts@contoso.com" -From "ArchiveAlerts@contoso.com" -smtp "smtp.contoso.com"
-.EXAMPLE 
-
 #> 
 
 #Imports
@@ -160,8 +158,6 @@ Function ProfileArchiver
 	}
 	
 	$archiveResults.GetEnumerator() | Sort-Object -property Value | ConvertTo-HTML | Out-File "$($tempFolder.value)\$dateStamp-Report.html"
-
-	
 	Send-MailMessage -To $emailRecipient -Subject $emailSubject -smtpServer $emailServer -From $emailSender -body $emailBody -Attachments "$($tempFolder.value)\$dateStamp-Report.html"
 
 }
