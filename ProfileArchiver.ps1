@@ -2,16 +2,18 @@
 .SYNOPSIS 
 	Auto-archives user profile folders.
 .DESCRIPTION 
-    	This script is designed to auto-archive user profiles created via Windows Folder Redirection policies (Group Policy) for users that no longer exist on the domain. This script will email a report of the results in text format.
+    This script is designed to auto-archive user profiles created via Windows Folder Redirection policies (Group Policy) for users that no longer exist on the domain. This script will email a report of the results in text format.
 .NOTES 
-    	File Name  : ProfileArchiver.ps1
-    	Author     : Brenton keegan - brenton.keegan@gmail.com 
-    	Licenced under GPLv3  
+    File Name  : ProfileArchiver.ps1
+    Author     : Brenton keegan - brenton.keegan@gmail.com 
+    Licenced under GPLv3  
 .LINK 
 	https://github.com/bkeegan/ProfileArchiver
-    	License: http://www.gnu.org/copyleft/gpl.html
+    License: http://www.gnu.org/copyleft/gpl.html
 .EXAMPLE 
 	ProfileArchiver -s "\\server\share\profiles" -d "\\archiveserver\shares\profiles" -To "ArchiveAlerts@contoso.com" -From "ArchiveAlerts@contoso.com" -smtp "smtp.contoso.com"
+.EXAMPLE 
+
 #> 
 
 #Imports
@@ -86,9 +88,10 @@ Function ProfileArchiver
 				switch -regex ($ACLEntry)
 				{
 					#expected ACL entries to ignore - if additional ACL entries are identified as expected, add to here
-					"CREATOR OWNER Allow  FullControl" {}
-					"NT AUTHORITY\\SYSTEM Allow  FullControl" {}
-					"BUILTIN\\Administrators Allow  FullControl" {}
+					"CREATOR OWNER.+" {}
+					"NT AUTHORITY\\.+" {}
+					"BUILTIN\\.+" {}
+					#custom user/groups also expected in all ACLs
 					"LIM\\Domain Admins Allow  FullControl" {}
 					#regex to detect broken SID
 					"S-1-5.+" {
@@ -106,7 +109,7 @@ Function ProfileArchiver
 				
 			
 			}
-			if($abnormalEntries -eq $true)
+			if(($abnormalEntries -eq $true) -or ($brokenSID -eq $false))
 			{
 				$foldersWithAbnormalACL += $folder.FullName
 				$archiveResults.Add($folder.FullName,"Abnormal ACL")
@@ -158,6 +161,7 @@ Function ProfileArchiver
 	}
 	
 	$archiveResults.GetEnumerator() | Sort-Object -property Value | ConvertTo-HTML | Out-File "$($tempFolder.value)\$dateStamp-Report.html"
+
 	Send-MailMessage -To $emailRecipient -Subject $emailSubject -smtpServer $emailServer -From $emailSender -body $emailBody -Attachments "$($tempFolder.value)\$dateStamp-Report.html"
 
 }
