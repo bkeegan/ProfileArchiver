@@ -111,9 +111,7 @@ Function ProfileArchiver
 			}
 			if(($abnormalEntries -eq $true) -or ($brokenSID -eq $false))
 			{
-				$foldersWithAbnormalACL += $folder.FullName
 				$archiveResults.Add($folder.FullName,"Abnormal ACL")
-
 			}
 			
 			if(($brokenSID -eq $true) -and ($abnormalEntries -eq $false))
